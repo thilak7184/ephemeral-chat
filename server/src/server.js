@@ -23,6 +23,9 @@ export function createApplication({ config = loadConfig(), roomManager: supplied
   const app = express();
   app.disable('x-powered-by');
   app.use(helmet({ crossOriginResourcePolicy: { policy: 'cross-origin' } }));
+  app.get('/api/healthz', (_request, response) =>
+    response.json({ ok: true, service: 'ephemeral-chat', storage: 'in-memory-only' }),
+  );
   app.use(
     cors({
       origin(origin, callback) {
@@ -36,9 +39,6 @@ export function createApplication({ config = loadConfig(), roomManager: supplied
     }),
   );
   app.use(express.json({ limit: '16kb', strict: true }));
-  app.get('/api/healthz', (_request, response) =>
-    response.json({ ok: true, service: 'ephemeral-chat', storage: 'in-memory-only' }),
-  );
   if (config.serveClient && existsSync(clientBuildDirectory)) {
     app.use(express.static(clientBuildDirectory, { index: false }));
     app.get('*', (request, response, next) => {
