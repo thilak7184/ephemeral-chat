@@ -1,0 +1,35 @@
+services:
+  - type: web
+    name: ephemeral-chat-api
+    runtime: node
+    plan: free
+    buildCommand: npm ci
+    startCommand: npm run start --workspace=server
+    healthCheckPath: /api/healthz
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: CLIENT_ORIGIN
+        sync: false
+      - key: WAITING_ROOM_TTL_MS
+        value: '600000'
+      - key: ACTIVE_ROOM_IDLE_TTL_MS
+        value: '3600000'
+      - key: DISCONNECT_GRACE_MS
+        value: '45000'
+      - key: MAX_MESSAGE_LENGTH
+        value: '2000'
+      - key: MESSAGE_RATE_LIMIT
+        value: '10'
+      - key: MESSAGE_RATE_WINDOW_MS
+        value: '5000'
+      - key: ROOM_ACTION_RATE_LIMIT
+        value: '20'
+      - key: ROOM_ACTION_RATE_WINDOW_MS
+        value: '60000'
+      - key: MAX_ROOMS
+        value: '1000'
+      - key: MAX_HTTP_BUFFER_SIZE
+        value: '16384'
+      - key: SERVE_CLIENT
+        value: 'false'
